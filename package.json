@@ -10,7 +10,11 @@
     "post-start": "cd client && npm start",
     "start": "node index.js",
     "start:nodemon": "nodemon index.js",
+    "build":"cd client && npm run build",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
+  },
+  "engines": {
+    "node": "12.x"
   },
   "author": "",
   "license": "ISC",

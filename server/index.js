@@ -1,5 +1,5 @@
 const http = require('http');
-const app = require('./server/app');
+const app = require('./app');
 
 let port = process.env.PORT;
 if (port === null || port === '') {

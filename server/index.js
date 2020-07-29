@@ -1,8 +1,10 @@
+require('dotenv').config();
+
 const http = require('http');
 const app = require('./app');
 
 let port = process.env.PORT;
-if (port === null || port === '') {
+if (port == null || port === '') {
   port = 8080;
 }
 

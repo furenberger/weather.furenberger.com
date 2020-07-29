@@ -4,6 +4,8 @@ const nunjucks = require('nunjucks');
 
 const log = require('./util/logger');
 
+const setMapboxConfig = require('../mapbox/setMapboxConfig');
+
 const app = express();
 nunjucks.configure('client/build', {
   autoescape: true,
@@ -26,12 +28,19 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
+// inject token(s) and env specific configs
+app.use(setMapboxConfig(express));
+
 // static SPA assets
 app.use(
   express.static('client/build', {
     index: false,
   })
 );
+
+app.get('/stateData', (req, res) => res.json({
+  data: 'hi'
+}));
 
 app.get('*', (req, res) => {
   res.render('index.html');

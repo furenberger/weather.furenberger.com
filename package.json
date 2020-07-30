@@ -8,11 +8,10 @@
     "test": "jest --config ./jest.config.json",
     "test:watch": "npm run test -- --watch",
     "dev": "npm run start | npm run post-start",
-    "post-start": "cd client && npm start",
     "start": "node server/index.js",
     "start:nodemon": "nodemon server/index.js",
     "build": "cd client && npm run build",
-    "heroku-postbuild": "cd client && npm install --only=dev --no-shrinkwrap && npm run build"
+    "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build"
   },
   "engines": {
     "node": "12.x"

@@ -1,10 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
+const path = require('path');
 
 const log = require('./util/logger');
 
 const setMapboxConfig = require('../mapbox/setMapboxConfig');
+
+const STATE_DATA = 'data/data.json';
 
 const app = express();
 nunjucks.configure('client/build', {
@@ -38,9 +41,10 @@ app.use(
   })
 );
 
-app.get('/stateData', (req, res) => res.json({
-  data: 'hi'
-}));
+app.get('/stateData', (req, res) => {
+  res.header('Content-Type', 'application/json');
+  res.sendFile(path.join(__dirname, STATE_DATA));
+});
 
 app.get('*', (req, res) => {
   res.render('index.html');

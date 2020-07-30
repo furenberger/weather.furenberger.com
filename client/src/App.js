@@ -17,6 +17,9 @@ const stateLayer = {
   },
 };
 
+// const STATE_DATA_URL = "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces_shp.geojson"
+const STATE_DATA_URL = "/stateData"
+
 const App = () => {
   const [stateData, setStateData] = useState({});
   const [viewport, setViewport] = useState({
@@ -28,15 +31,17 @@ const App = () => {
   });
 
   useEffect(() => {
+    console.log('get state data')
     requestJson(
-      "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces_shp.geojson",
+      STATE_DATA_URL,
       (error, response) => {
         if (!error) {
+          console.log('setting state data')
           setStateData(response);
         }
       }
     );
-  });
+  },[]);
 
   const _onViewportChange = (viewport) => setViewport(viewport);
 

@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import "mapbox-gl/src/css/mapbox-gl.css";
 import bbox from "@turf/bbox";
 
 import MapGL, {
@@ -9,38 +8,13 @@ import MapGL, {
   WebMercatorViewport,
 } from "react-map-gl";
 import { json as requestJson } from "d3-request";
-
 import { AppBar, Typography, Toolbar } from "@material-ui/core";
+
+import "mapbox-gl/src/css/mapbox-gl.css";
+import { stateBorders, stateFill } from "./map-styles";
 
 //get this from the config (set in index.html from the node process)
 const mapboxConfig = MAPBOX_CONFIG; // eslint-disable-line
-
-const stateFill = {
-  id: "state-fill",
-  type: "fill",
-  source: "states",
-  layout: {},
-  paint: {
-    "fill-color": "#627BC1",
-    "fill-opacity": [
-      "case",
-      ["boolean", ["feature-state", "hover"], false],
-      1,
-      0,
-    ],
-  },
-};
-
-const stateBorders = {
-  id: "state-borders",
-  type: "line",
-  source: "states",
-  layout: {},
-  paint: {
-    "line-color": "#627BC1",
-    "line-width": 1,
-  },
-};
 
 // const STATE_DATA_URL = "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces_shp.geojson"
 const STATE_DATA_URL = "/stateData";
@@ -93,7 +67,7 @@ const App = () => {
     });
   };
 
-  const setFeatureState = (map,id,hover) => {
+  const setFeatureState = (map, id, hover) => {
     map.setFeatureState(
       {
         source: "states",
@@ -103,7 +77,7 @@ const App = () => {
         hover,
       }
     );
-  }
+  };
 
   const _onHover = (event) => {
     if (event && event.features) {
@@ -116,20 +90,20 @@ const App = () => {
       // if you are actually hovered over a state
       if (feature) {
         //clear the previous state
-        setFeatureState(mapboxSource.map,selectedState.id,false)
+        setFeatureState(mapboxSource.map, selectedState.id, false);
 
         // console.log(_sourceRef)
         // console.log('source: ', mapboxSource.map.__proto__)
         // console.log(_mapRef)
         // console.log(mapboxMapgl)
-        setFeatureState(mapboxSource.map,feature.id,true)
+        setFeatureState(mapboxSource.map, feature.id, true);
 
         setSelectedState({
           stateName: feature.properties.STATE_NAME,
           id: feature.id,
         });
       } else {
-        setFeatureState(mapboxSource.map,selectedState.id,false)
+        setFeatureState(mapboxSource.map, selectedState.id, false);
       }
     }
   };

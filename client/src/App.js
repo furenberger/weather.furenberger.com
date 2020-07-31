@@ -1,24 +1,50 @@
 import React, { useEffect, useState } from "react";
 import "mapbox-gl/src/css/mapbox-gl.css";
+import bbox from "@turf/bbox";
 
-import MapGL, { Source, Layer } from "react-map-gl";
+import MapGL, {
+  Source,
+  Layer,
+  FlyToInterpolator,
+  WebMercatorViewport,
+
+} from "react-map-gl";
 import { json as requestJson } from "d3-request";
 
-import {AppBar, Typography, Toolbar} from "@material-ui/core";
+import { AppBar, Typography, Toolbar } from "@material-ui/core";
 
 //get this from the config (set in index.html from the node process)
 const mapboxConfig = MAPBOX_CONFIG; // eslint-disable-line
 
-const stateLayer = {
-  id: "stateLayer",
+const stateFill = {
+  id: "state-fill",
   type: "fill",
+  source: "states",
+  layout: {},
   paint: {
-    "fill-opacity": 0,
+    "fill-color": "#627BC1",
+    "fill-opacity": [
+      "case",
+      ["boolean", ["feature-state", "hover"], false],
+      1,
+      0,
+    ],
+  },
+};
+
+const stateBorders = {
+  id: "state-borders",
+  type: "line",
+  source: "states",
+  layout: {},
+  paint: {
+    "line-color": "#627BC1",
+    "line-width": 2,
   },
 };
 
 // const STATE_DATA_URL = "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces_shp.geojson"
-const STATE_DATA_URL = "/stateData"
+const STATE_DATA_URL = "/stateData";
 
 const App = () => {
   const [stateData, setStateData] = useState({});
@@ -29,34 +55,71 @@ const App = () => {
     bearing: 0,
     pitch: 0,
   });
+  const [filter, setFilter] = useState(['in', 'STATE', '']);
+  const [selectedState, setSelectedState] = useState('');
 
   useEffect(() => {
-    console.log('get state data')
-    requestJson(
-      STATE_DATA_URL,
-      (error, response) => {
-        if (!error) {
-          console.log('setting state data')
-          setStateData(response);
-        }
+    requestJson(STATE_DATA_URL, (error, response) => {
+      if (!error) {
+        setStateData(response);
       }
-    );
-  },[]);
+    });
+  }, []);
 
   const _onViewportChange = (viewport) => setViewport(viewport);
 
+  const _gotoBoundingBox = (feature) => {
+    // calculate the bounding box of the feature
+    const [minLng, minLat, maxLng, maxLat] = bbox(feature);
+
+    // construct a viewport instance from the current state
+    const newViewPort = new WebMercatorViewport(viewport);
+    const { longitude, latitude, zoom } = newViewPort.fitBounds(
+      [
+        [minLng, minLat],
+        [maxLng, maxLat],
+      ],
+      {
+        padding: 40,
+      }
+    );
+
+    _onViewportChange({
+      longitude,
+      latitude,
+      zoom,
+      transitionInterpolator: new FlyToInterpolator({ speed: 2 }),
+      transitionDuration: "auto",
+    });
+  };
+
+  const _onHover = (event) => {
+    if (event && event.features) {
+      const feature = event.features.find((f) => f.layer.id === "state-fill");
+
+      // if you are actually hovered over a state
+      if (feature) {
+        console.log(feature.properties.name);
+        setSelectedState(selectedState);
+        setFilter(['in', 'STATE', selectedState])
+      }
+    }
+  };
+
   const _onClick = (event) => {
-    // feature (state)
-    const feature = event.features.find((f) => f.layer.id === "stateLayer");
+    if (event && event.features) {
+      const feature = event.features.find((f) => f.layer.id === "state-fill");
 
-    // long/lat of click
-    // console.log(event.lngLat);
-    // const long = event.lngLat[0];
-    // const lat = event.lngLat[1];
+      // long/lat of click
+      // console.log(event.lngLat);
+      // const long = event.lngLat[0];
+      // const lat = event.lngLat[1];
+      // _goToViewport(long, lat);
 
-    if (feature) {
-      // look up cluster expansion zoom (properties inside the feature (state))
-      console.log(feature.properties);
+      if (feature) {
+        // look up cluster expansion zoom (properties inside the feature (state))
+        _gotoBoundingBox(feature);
+      }
     }
   };
 
@@ -64,9 +127,7 @@ const App = () => {
     <React.Fragment>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6">
-            Weather
-          </Typography>
+          <Typography variant="h6">Weather</Typography>
         </Toolbar>
       </AppBar>
       <div style={{ height: "100%", position: "relative" }}>
@@ -78,10 +139,12 @@ const App = () => {
           onViewportChange={_onViewportChange}
           mapboxApiAccessToken={mapboxConfig.mapboxToken}
           onClick={_onClick}
+          onHover={_onHover}
         >
           {Object.keys(stateData).length > 0 ? (
-            <Source type="geojson" data={stateData}>
-              <Layer {...stateLayer} />
+            <Source type="geojson" data={stateData} id="states">
+              <Layer {...stateFill} />
+              <Layer {...stateBorders} />
             </Source>
           ) : (
             ""

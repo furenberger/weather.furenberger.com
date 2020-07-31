@@ -7,7 +7,8 @@ const log = require('./util/logger');
 
 const setMapboxConfig = require('../mapbox/setMapboxConfig');
 
-const STATE_DATA = 'data/data.json';
+// const STATE_DATA = 'data/data.json';
+const STATE_DATA = 'data/us_states.json';
 
 const app = express();
 nunjucks.configure('client/build', {

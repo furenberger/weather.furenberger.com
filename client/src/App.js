@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "mapbox-gl/src/css/mapbox-gl.css";
 import bbox from "@turf/bbox";
 
@@ -7,7 +7,6 @@ import MapGL, {
   Layer,
   FlyToInterpolator,
   WebMercatorViewport,
-
 } from "react-map-gl";
 import { json as requestJson } from "d3-request";
 
@@ -39,7 +38,7 @@ const stateBorders = {
   layout: {},
   paint: {
     "line-color": "#627BC1",
-    "line-width": 2,
+    "line-width": 1,
   },
 };
 
@@ -55,8 +54,9 @@ const App = () => {
     bearing: 0,
     pitch: 0,
   });
-  const [filter, setFilter] = useState(['in', 'STATE', '']);
-  const [selectedState, setSelectedState] = useState('');
+  const [selectedState, setSelectedState] = useState({ stateName: "", id: "" });
+
+  const _sourceRef = useRef(null);
 
   useEffect(() => {
     requestJson(STATE_DATA_URL, (error, response) => {
@@ -93,15 +93,43 @@ const App = () => {
     });
   };
 
+  const setFeatureState = (map,id,hover) => {
+    map.setFeatureState(
+      {
+        source: "states",
+        id: id,
+      },
+      {
+        hover,
+      }
+    );
+  }
+
   const _onHover = (event) => {
     if (event && event.features) {
+      //get a reference to the mapbox inside the component
+      const mapboxSource = _sourceRef.current.getSource();
+
+      // console.log("features");
       const feature = event.features.find((f) => f.layer.id === "state-fill");
 
       // if you are actually hovered over a state
       if (feature) {
-        console.log(feature.properties.name);
-        setSelectedState(selectedState);
-        setFilter(['in', 'STATE', selectedState])
+        //clear the previous state
+        setFeatureState(mapboxSource.map,selectedState.id,false)
+
+        // console.log(_sourceRef)
+        // console.log('source: ', mapboxSource.map.__proto__)
+        // console.log(_mapRef)
+        // console.log(mapboxMapgl)
+        setFeatureState(mapboxSource.map,feature.id,true)
+
+        setSelectedState({
+          stateName: feature.properties.STATE_NAME,
+          id: feature.id,
+        });
+      } else {
+        setFeatureState(mapboxSource.map,selectedState.id,false)
       }
     }
   };
@@ -142,7 +170,12 @@ const App = () => {
           onHover={_onHover}
         >
           {Object.keys(stateData).length > 0 ? (
-            <Source type="geojson" data={stateData} id="states">
+            <Source
+              type="geojson"
+              data={stateData}
+              id="states"
+              ref={_sourceRef}
+            >
               <Layer {...stateFill} />
               <Layer {...stateBorders} />
             </Source>

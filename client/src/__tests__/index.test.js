@@ -9,7 +9,7 @@ jest.mock("../serviceWorker", () => ({ unregister: jest.fn() }));
 
 describe("index.js testing", () => {
   const div = document.createElement("div");
-  div.id = "map";
+  div.id = "root";
 
   beforeEach(() => {
     document.body.appendChild(div);
@@ -21,7 +21,7 @@ describe("index.js testing", () => {
       <React.StrictMode>
         <App />
       </React.StrictMode>,
-      document.getElementById("map")
+      document.getElementById("root")
     );
   });
 

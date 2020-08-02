@@ -1,6 +1,6 @@
 import React from "react";
-import { render } from "@testing-library/react";
-import App from "../App";
+import { render, fireEvent } from "@testing-library/react";
+import Map from "../Map";
 
 import MapGL, {  Source,
   Layer,
@@ -12,13 +12,9 @@ beforeEach(() => {
   jest.clearAllMocks();
 });
 
-
-describe("App.test", () => {
+describe("Map.test", () => {
   it("snapshot renders", () => {
-    const container = render(<App />);
+    const container = render(<Map />);
     expect(container.firstChild).toMatchSnapshot();
   });
-
-
-
 });

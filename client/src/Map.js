@@ -7,7 +7,6 @@ import MapGL, {
   FlyToInterpolator,
   WebMercatorViewport,
 } from "react-map-gl";
-import { json as requestJson } from "d3-request";
 
 import "mapbox-gl/src/css/mapbox-gl.css";
 import { stateBorders, stateFill } from "./map-styles";
@@ -18,7 +17,9 @@ const mapboxConfig = MAPBOX_CONFIG; // eslint-disable-line
 // const STATE_DATA_URL = "https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_admin_1_states_provinces_shp.geojson"
 const STATE_DATA_URL = "/stateData";
 
-const Map = ({selectedState, setSelectedState}) => {
+const Map = (props) => {
+  const {selectedState, setSelectedState} = props;
+
   const [stateData, setStateData] = useState({});
   const [viewport, setViewport] = useState({
     latitude: 40,
@@ -32,11 +33,15 @@ const Map = ({selectedState, setSelectedState}) => {
   const _sourceRef = useRef(null);
 
   useEffect(() => {
-    requestJson(STATE_DATA_URL, (error, response) => {
-      if (!error) {
-        setStateData(response);
+    const fetchData = async () => {
+      const response = await fetch(STATE_DATA_URL);
+      if (response.ok) {
+        let json = await response.json();
+        setStateData(json)
       }
-    });
+    };
+
+    fetchData();
   }, []);
 
   const _onViewportChange = (viewport) => setViewport(viewport);
@@ -95,10 +100,13 @@ const Map = ({selectedState, setSelectedState}) => {
       if (feature) {
         // look up cluster expansion zoom (properties inside the feature (state))
         _gotoBoundingBox(feature);
-        setSelectedState({
-          stateName: feature.properties.STATE_NAME,
-          id: feature.id,
-        });
+
+        if(selectedState.stateName !== feature.properties.STATE_NAME) {
+          setSelectedState({
+            stateName: feature.properties.STATE_NAME,
+            id: feature.id
+          });
+        }
       }
     }
   };

@@ -1,5 +1,5 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, fireEvent, waitFor } from "@testing-library/react";
 import App from "../App";
 
 import MapGL, {  Source,
@@ -14,11 +14,10 @@ beforeEach(() => {
 
 
 describe("App.test", () => {
-  it("snapshot renders", () => {
+  test("snapshot renders", () => {
     const container = render(<App />);
     expect(container.firstChild).toMatchSnapshot();
   });
-
 
 
 });

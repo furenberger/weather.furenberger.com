@@ -1,7 +1,7 @@
 import { stateFill, stateBorders } from "../map-styles";
 
 describe("map styles", () => {
-  test("it should export a state fill", () => {
+  it("it should export a state fill", () => {
     expect(stateFill).toEqual(
       expect.objectContaining({
         id: "state-fill",
@@ -13,7 +13,7 @@ describe("map styles", () => {
     );
   });
 
-  test("it should export a state borders", () => {
+  it("it should export a state borders", () => {
     expect(stateBorders).toEqual(
       expect.objectContaining({
         id: "state-borders",

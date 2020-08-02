@@ -48,8 +48,8 @@ app.get('/stateData', (req, res) => {
   res.sendFile(path.join(__dirname, STATE_DATA));
 });
 
-app.get('/stateAbbreviation/:id', (req, res) => {
-  const abbrev = STATE_ABBREV[req.params.id];
+app.get('/stateAbbreviation/:stateName', (req, res) => {
+  const abbrev = STATE_ABBREV[req.params.stateName];
   res.json({
     STATE_ABBREV: abbrev
   });

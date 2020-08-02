@@ -1,20 +1,21 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import Map from "../Map";
 
-import MapGL, {  Source,
-  Layer,
-  FlyToInterpolator,
-  WebMercatorViewport
-} from 'react-map-gl'
-
-beforeEach(() => {
-  jest.clearAllMocks();
-});
+// import MapGL, {  Source,
+//   Layer,
+//   FlyToInterpolator,
+//   WebMercatorViewport
+// } from 'react-map-gl'
 
 describe("Map.test", () => {
   it("snapshot renders", () => {
-    const container = render(<Map />);
+    const setSelectedState = jest.fn()
+    const selectedState = {
+      stateName: 'Wisconsin',
+      id: '55'
+    }
+    const container = render(<Map selectedState={selectedState} setSelectedState={setSelectedState} />);
     expect(container.firstChild).toMatchSnapshot();
   });
 });

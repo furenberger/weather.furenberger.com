@@ -1,4 +1,4 @@
-const getStateFlag = async (stateName) => {
+export const getStateFlag = async (stateName) => {
   return fetch(`/stateAbbreviation/${stateName}`)
     .then(response => response.json())
     .then(json => {
@@ -6,7 +6,3 @@ const getStateFlag = async (stateName) => {
       return `http://flags.ox3.in/svg/us/${abbrev}.svg`
     })
 };
-
-module.exports = {
-  getStateFlag
-}

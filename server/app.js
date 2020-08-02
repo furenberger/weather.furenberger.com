@@ -6,6 +6,7 @@ const path = require('path');
 const log = require('./util/logger');
 
 const setMapboxConfig = require('../mapbox/setMapboxConfig');
+const STATE_ABBREV = require('./data/stateAbbreviation.json');
 
 // const STATE_DATA = 'data/data.json';
 const STATE_DATA = 'data/us_states.json';
@@ -45,6 +46,13 @@ app.use(
 app.get('/stateData', (req, res) => {
   res.header('Content-Type', 'application/json');
   res.sendFile(path.join(__dirname, STATE_DATA));
+});
+
+app.get('/stateAbbreviation/:id', (req, res) => {
+  const abbrev = STATE_ABBREV[req.params.id];
+  res.json({
+    STATE_ABBREV: abbrev
+  });
 });
 
 app.get('*', (req, res) => {

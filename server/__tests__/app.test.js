@@ -49,14 +49,23 @@ describe('app endpoints', () => {
 
   it('get weather data - success', async() => {
     const mockData = {
+      name: 'fake town',
       weather: [
         {
-          id: 800,
           main: 'Clear',
           description: 'clear sky',
           icon: '01d'
         }
-      ]
+      ],
+      main: {
+        temp: 75,
+        temp_min: -45,
+        temp_max: 100,
+        humidity: 93
+      },
+      wind: {
+        speed: 10
+      },
     };
 
     axios.mockResolvedValue({
@@ -68,7 +77,33 @@ describe('app endpoints', () => {
       .expect(200)
       .expect('Content-Type', 'application/json; charset=utf-8')
       .then(res => {
-        expect(res.body).toMatchObject(mockData);
+        expect(res.body).toMatchObject(
+          {
+            city: 'fake town',
+            temperature: '75º',
+            icon: 'http://openweathermap.org/img/wn/01d@2x.png',
+            iconName: 'Clear',
+            description: 'clear sky',
+            details: [
+              {
+                value: '100º',
+                label: 'High Temperature',
+              },
+              {
+                value: '-45º',
+                label: 'Low Temperature',
+              },
+              {
+                value: '93%',
+                label: 'Humidity',
+              },
+              {
+                value: '10 mph',
+                label: 'Wind Speed',
+              },
+            ],
+          }
+        );
       });
   });
 

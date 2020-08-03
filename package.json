@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "jest",
-    "test:watch": "npm run test -- --watchAll=true",
+    "testAll": "npm run test -- --watchAll=true",
     "dev": "npm run start | npm run post-start",
     "start": "node server/index.js",
     "start:nodemon": "nodemon server/index.js",

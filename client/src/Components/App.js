@@ -5,7 +5,7 @@ import { AppBar, Typography, Toolbar, Grid } from "@material-ui/core";
 import Map from "./Map";
 import Panel from "./Panel";
 
-import { getStateFlag } from "./util";
+import { getStateFlag } from "../util";
 
 const App = () => {
   const [selectedState, setSelectedState] = useState({});

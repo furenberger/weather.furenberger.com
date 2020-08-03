@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import Map from "../Map";
+import Map from "../../Components/Map";
 
 // import MapGL, {  Source,
 //   Layer,

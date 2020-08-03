@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import Panel from "../Panel";
+import Panel from "../../Components/Panel";
 
 beforeEach(() => {
   jest.clearAllMocks();

@@ -9,7 +9,7 @@ import MapGL, {
 } from "react-map-gl";
 
 import "mapbox-gl/src/css/mapbox-gl.css";
-import { stateBorders, stateFill } from "./map-styles";
+import { stateBorders, stateFill } from "../map-styles";
 
 //get this from the config (set in index.html from the node process)
 const mapboxConfig = MAPBOX_CONFIG; // eslint-disable-line

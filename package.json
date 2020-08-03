@@ -5,8 +5,8 @@
   "main": "server/index.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "jest --config ./jest.config.json",
-    "test:watch": "npm run test -- --watch",
+    "test": "jest",
+    "test:watch": "npm run test -- --watchAll=true",
     "dev": "npm run start | npm run post-start",
     "start": "node server/index.js",
     "start:nodemon": "nodemon server/index.js",
@@ -19,11 +19,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.19.2",
     "body-parser": "^1.19.0",
     "bunyan": "^1.8.14",
     "config": "^3.3.1",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "express-validator": "^6.6.1",
     "nodemon": "^2.0.4",
     "nunjucks": "^3.2.2"
   },
@@ -34,7 +36,8 @@
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.8",
-    "jest": "^26.1.0"
+    "jest": "^26.1.0",
+    "supertest": "^4.0.2"
   },
   "nodemonConfig": {
     "ignore": [

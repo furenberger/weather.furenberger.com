@@ -5,7 +5,9 @@ import {
   CardHeader,
   CardMedia,
   CardContent,
+  TextField,
   Typography,
+  Button
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -33,19 +35,36 @@ const Panel = (props) => {
 
   const renderStateCard = (selectedState) => {
     return (
-      <Card className={classes.card}>
-        <CardContent className={classes.cardContent}>
-          <CardHeader
-            className={classes.cardHeader}
-            title={selectedState.stateName}
-          />
-          <CardMedia
-            className={classes.media}
-            image={selectedState.stateFlagUrl}
-            title={selectedState.stateName + " state flag"}
-          />
-        </CardContent>
-      </Card>
+      <React.Fragment>
+        <Card className={classes.card}>
+          <CardContent className={classes.cardContent}>
+            <CardHeader
+              className={classes.cardHeader}
+              title={selectedState.stateName}
+            />
+            <CardMedia
+              className={classes.media}
+              image={selectedState.stateFlagUrl}
+              title={selectedState.stateName + " state flag"}
+            />
+          </CardContent>
+        </Card>
+        <Card className={classes.card}>
+          <CardContent className={classes.cardContent}>
+            <CardHeader
+              className={classes.cardHeader}
+              title="Weather"
+            />
+            <TextField id="zipcode" required fullWidth label="Zip Code" autoComplete="billing postal-code"/>
+            <Button variant="contained"
+                      color="primary"
+                      // onClick={this.handleNext}
+                      >
+                        Go!
+                      </Button>
+          </CardContent>
+        </Card>
+      </React.Fragment>
     );
   };
 

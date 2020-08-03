@@ -1,7 +1,9 @@
 const express = require('express');
+const { check, validationResult } = require('express-validator');
 const bodyParser = require('body-parser');
 const nunjucks = require('nunjucks');
 const path = require('path');
+const axios = require('axios');
 
 const log = require('./util/logger');
 
@@ -18,8 +20,6 @@ nunjucks.configure('client/build', {
   express: app,
 });
 
-app.disable('x-powered-by');
-
 // Logging incoming request using bunyan (stdout to log)
 app.use((req, res, next) => {
   req.log = log.child({
@@ -31,6 +31,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.disable('x-powered-by');
 app.use(bodyParser.json());
 
 // inject token(s) and env specific configs
@@ -43,27 +44,54 @@ app.use(
   })
 );
 
+app.get(
+  '/weather/:zip',
+  [check('zip').isNumeric(), check('zip').isLength({ min: 5, max: 5 })],
+  async(req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    // api.openweathermap.org/data/2.5/weather?zip={zip code},{country code}&appid={your api key}
+    const { zip } = req.params;
+    const config = {
+      method: 'get',
+      url: 'https://api.openweathermap.org/data/2.5/weather',
+      params: {
+        zip: `${zip},us`,
+        appid: process.env.WEATHER_TOKEN,
+      },
+      responseType: 'json',
+    };
+
+    const response = await axios(config);
+    res.json(response.data);
+  }
+);
+
 app.get('/stateData', (req, res) => {
   res.header('Content-Type', 'application/json');
   res.sendFile(path.join(__dirname, STATE_DATA));
 });
 
-app.get('/stateAbbreviation/:stateName', (req, res) => {
-  const abbrev = STATE_ABBREV[req.params.stateName];
-  res.json({
-    STATE_ABBREV: abbrev
-  });
-});
+app.get(
+  '/stateAbbreviation/:stateName',
+  [check('stateName').isAlpha()],
+  (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+
+    const abbrev = STATE_ABBREV[req.params.stateName.toUpperCase()];
+    return res.json({
+      STATE_ABBREV: abbrev.toUpperCase(),
+    });
+  }
+);
 
 app.get('*', (req, res) => {
   res.render('index.html');
-});
-
-// Catch 404 and forward to error handler
-app.use((req, res, next) => {
-  const err = new Error('InvalidUri or HttpVerb');
-  err.status = 400;
-  next(err);
 });
 
 app.use((err, req, res, next) => {

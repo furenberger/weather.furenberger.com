@@ -14,10 +14,8 @@ beforeEach(() => {
 
 
 describe("App.test", () => {
-  test("snapshot renders", () => {
+  it("snapshot renders", () => {
     const container = render(<App />);
     expect(container.firstChild).toMatchSnapshot();
   });
-
-
 });

@@ -1,6 +1,7 @@
 # weather-furenberger-com.herokuapp.com
+[weather-furenberger-com.herokuapp.com](https://weather-furenberger-com.herokuapp.com)
 
-Example of using react hooks to populate a map with state boundary clickability and then state specific lookup of weather.
+Example of using react hooks to populate a map with state boundary clickability and then zip specific lookup of weather.
 
 ## Running
 

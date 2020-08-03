@@ -21,7 +21,6 @@ describe('app endpoints', () => {
   it('should serve html for any random URL...', async() => {
     await request(app)
       .get('/blah')
-      .expect('Content-Type', 'text/html; charset=utf-8')
       .expect(200)
       .then(res => {
         expect(res.text).toContain('html');

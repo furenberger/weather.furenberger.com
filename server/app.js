@@ -60,12 +60,42 @@ app.get(
       params: {
         zip: `${zip},us`,
         appid: process.env.WEATHER_TOKEN,
+        units: 'imperial'
       },
       responseType: 'json',
     };
 
     const response = await axios(config);
-    res.json(response.data);
+
+    // console.log(JSON.parse(JSON.stringify(response.data)));
+    // send back normalized weather and some data-driven details
+    const weather = {
+      city: response.data.name,
+      temperature: `${Math.round(response.data.main.temp)}º`,
+      icon: `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
+      iconName: response.data.weather[0].main,
+      description: response.data.weather[0].description,
+      details: [
+        {
+          value: `${response.data.main.temp_max}º`,
+          label: 'High Temperature'
+        },
+        {
+          value: `${response.data.main.temp_min}º`,
+          label: 'Low Temperature'
+        },
+        {
+          value: `${response.data.main.humidity}%`,
+          label: 'Humidity'
+        },
+        {
+          value: `${response.data.wind.speed} mph`,
+          label: 'Wind Speed'
+        }
+      ]
+    };
+
+    res.json(weather);
   }
 );
 

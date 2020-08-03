@@ -26,6 +26,27 @@ const handlers = [
       })
     );
   }),
+  rest.get("/weather/:zipCode", (req, res, ctx) => {
+    const { zipCode } = req.params;
+
+    const weather = {
+      city: "city",
+      temperature: "9",
+      icon: `http://openweathermap.org/img/wn/04d@2x.png`,
+      iconName: "clouds",
+      description: "desc",
+      details: [
+        {
+          value: "1000000",
+          label: "High Temperature",
+        },
+      ],
+    };
+
+    return res(
+      ctx.json(weather)
+    );
+  }),
 ];
 
 export { handlers };

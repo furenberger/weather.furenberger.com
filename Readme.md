@@ -17,10 +17,16 @@ When the dyno starts it funs the Procfile `node server/index.js`
 
 ### Localhost
 
-The ideal set up for debugging is two terminals.  You can run one just like the server but then the logs only appear for the UI.
+The ideal set up for debugging is two terminals.  You can run one just like the server but then the logs only appear for the UI.  You could even run a third/fourth terminal with the tests too.
 
 One Terminal (client)
 `cd client && npm run start`
 
 Second Terminal (server)
 `npm run start` (or `npm run start:nodemon`)
+
+
+You will need a .env file (make a copy of .env.fake and rename)
+
+Get your mapbox token: https://www.mapbox.com/
+Get your openweather token: https://openweathermap.org/

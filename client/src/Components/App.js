@@ -21,7 +21,7 @@ const App = () => {
       const weather = await getWeather(newZip);
       setWeather(weather);
     } else {
-      setWeather({})
+      setWeather({});
     }
   };
 
@@ -31,6 +31,8 @@ const App = () => {
       ...selectedState,
       stateFlagUrl,
     });
+    setZipCode("");
+    setWeather({});
   };
 
   return (

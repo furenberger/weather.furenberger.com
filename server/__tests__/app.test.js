@@ -18,15 +18,6 @@ jest.mock('../util/logger', () => ({
 }));
 
 describe('app endpoints', () => {
-  it('should serve html for any random URL...', async() => {
-    await request(app)
-      .get('/blah')
-      .expect(200)
-      .then(res => {
-        expect(res.text).toContain('html');
-      });
-  });
-
   it('get state abbreviation for wisconsin - success', async() => {
     const expectedResult = { STATE_ABBREV: 'WI' };
 
